@@ -1,0 +1,54 @@
+ok:true
+result:update_id:283451411
+result:message:message_id:35
+result:message:from:id:6644018366
+result:message:from:is_bot:false
+result:message:from:first_name:Cá
+result:message:from:last_name:Con
+result:message:from:username:vidsrv
+result:message:from:language_code:en
+result:message:chat:id:-1003436895507
+result:message:chat:title:Dev Vidsrv
+result:message:chat:is_forum:true
+result:message:chat:type:supergroup
+result:message:date:1763987692
+result:message:text:hi
+result:update_id:283451412
+result:message:message_id:18
+result:message:from:id:6644018366
+result:message:from:is_bot:false
+result:message:from:first_name:Cá
+result:message:from:last_name:Con
+result:message:from:username:vidsrv
+result:message:from:language_code:en
+result:message:chat:id:6644018366
+result:message:chat:first_name:Cá
+result:message:chat:last_name:Con
+result:message:chat:username:vidsrv
+result:message:chat:type:private
+result:message:date:1763987709
+result:message:text:hi
+result:update_id:283451413
+result:channel_post:message_id:10955
+result:channel_post:from:id:6644018366
+result:channel_post:from:is_bot:false
+result:channel_post:from:first_name:Cá
+result:channel_post:from:last_name:Con
+result:channel_post:from:username:vidsrv
+result:channel_post:from:language_code:en
+result:channel_post:author_signature:Cá Con
+result:channel_post:chat:id:-1003180479271
+result:channel_post:chat:title:Debug Kphong
+result:channel_post:chat:type:channel
+result:channel_post:date:1763987715
+result:channel_post:text:hi
+result:update_id:283451414
+result:channel_post:message_id:3900
+result:channel_post:sender_chat:id:-1003228090601
+result:channel_post:sender_chat:title:Kphong Data
+result:channel_post:sender_chat:type:channel
+result:channel_post:chat:id:-1003228090601
+result:channel_post:chat:title:Kphong Data
+result:channel_post:chat:type:channel
+result:channel_post:date:1763987721
+result:channel_post:text:hi

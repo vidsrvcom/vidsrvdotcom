@@ -1,0 +1,71 @@
+# API Performance Optimization
+# Enable gzip compression
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE application/json
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE application/javascript
+</IfModule>
+
+# Enable Expires headers for caching
+<IfModule mod_expires.c>
+    ExpiresActive On
+    
+    # API responses - short cache (2 minutes for list, 5 minutes for get)
+    ExpiresByType application/json "access plus 2 minutes"
+    
+    # Static assets - longer cache
+    ExpiresByType text/html "access plus 1 hour"
+    ExpiresByType text/css "access plus 1 week"
+    ExpiresByType application/javascript "access plus 1 week"
+    ExpiresByType image/jpeg "access plus 1 month"
+    ExpiresByType image/png "access plus 1 month"
+</IfModule>
+
+# Security headers
+<IfModule mod_headers.c>
+    # CORS headers
+    Header set Access-Control-Allow-Origin "*"
+    Header set Access-Control-Allow-Methods "GET, POST, OPTIONS"
+    Header set Access-Control-Allow-Headers "Content-Type"
+    
+    # Security headers
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
+    
+    # Cache control for API
+    <FilesMatch "\.(php)$">
+        Header set Cache-Control "public, max-age=120, must-revalidate"
+    </FilesMatch>
+</IfModule>
+
+# PHP settings optimization
+<IfModule mod_php7.c>
+    php_value memory_limit 256M
+    php_value max_execution_time 30
+    php_value post_max_size 20M
+    php_value upload_max_filesize 20M
+    php_flag display_errors Off
+    php_flag log_errors On
+</IfModule>
+
+# Enable output compression
+php_flag zlib.output_compression On
+
+# Disable directory listing
+Options -Indexes
+
+# Custom error pages
+ErrorDocument 404 /404.html
+ErrorDocument 500 /500.html
+
+# Rewrite engine for clean URLs (if needed)
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+    
+    # Force HTTPS (uncomment if using SSL)
+    # RewriteCond %{HTTPS} off
+    # RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
+</IfModule>

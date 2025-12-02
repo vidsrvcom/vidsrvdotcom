@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Videos API Documentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        .animated-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .gradient-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.5;
+            animation: float 20s infinite ease-in-out;
+        }
+        .orb-1 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(251, 63, 99, 0.4) 0%, transparent 70%);
+            top: -10%;
+            left: -10%;
+        }
+        .orb-2 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(124, 58, 237, 0.3) 0%, transparent 70%);
+            bottom: -10%;
+            right: -10%;
+            animation-delay: 7s;
+        }
+        .orb-3 {
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(236, 72, 153, 0.3) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: 14s;
+        }
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+        
+        .container {
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+            z-index: 1;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-align: center;
+            background: linear-gradient(135deg, #FB3F63 0%, #7C3AED 50%, #EC4899 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.02em;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #909090;
+            margin-bottom: 3rem;
+            font-size: 1.1rem;
+        }
+        
+        .card {
+            background: rgba(20, 20, 20, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+        
+        h2 {
+            color: #EC4899;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        h3 {
+            color: #7C3AED;
+            font-size: 1.2rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.8rem;
+        }
+        
+        .description {
+            color: #b0b0b0;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        
+        .endpoint-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .endpoint-title {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #ffffff;
+        }
+        
+        .method {
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        
+        .method.get {
+            background: rgba(52, 168, 83, 0.2);
+            color: #34A853;
+            border: 1px solid rgba(52, 168, 83, 0.4);
+        }
+        
+        .url {
+            background: rgba(236, 72, 153, 0.1);
+            border: 1px solid rgba(236, 72, 153, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #EC4899;
+            margin-bottom: 1rem;
+            word-break: break-all;
+        }
+        
+        .params-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        
+        .params-table th {
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            padding: 0.8rem;
+            text-align: left;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .params-table td {
+            padding: 0.8rem;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .param-name {
+            color: #7C3AED;
+            font-weight: 600;
+            font-family: 'Monaco', 'Courier New', monospace;
+        }
+        
+        .param-type {
+            color: #FBBC05;
+            font-family: 'Monaco', 'Courier New', monospace;
+        }
+        
+        .example-title {
+            color: #ffffff;
+            font-weight: 600;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        pre {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 1.2rem;
+            overflow-x: auto;
+            margin: 0.5rem 0 1rem 0;
+        }
+        
+        code {
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #e0e0e0;
+            line-height: 1.5;
+        }
+        
+        .error-code {
+            color: #FB3F63;
+        }
+        
+        .success-code {
+            color: #34A853;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+            .params-table {
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-background">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
+    </div>
+
+    <div class="container">
+        <h1>🎬 Videos API Documentation</h1>
+        <p class="subtitle">REST API cho Video Management System</p>
+
+        <!-- Intro -->
+        <div class="card">
+            <h2>📖 Giới Thiệu</h2>
+            <p class="description">
+                Videos API cung cấp 9 endpoints GET-only để quản lý và khám phá AI-generated videos. 
+                Tất cả endpoints trả về JSON format với UTF-8 encoding. API được tối ưu với SQL_CALC_FOUND_ROWS, 
+                persistent connections, prepared statements và comprehensive error handling.
+            </p>
+            <p class="description">
+                <strong>Base URL:</strong> <code>https://vidsrv.com/video/api.php</code><br>
+                <strong>Version:</strong> 1.0<br>
+                <strong>Last Updated:</strong> December 2, 2025
+            </p>
+        </div>
+
+        <!-- Overview -->
+        <div class="card">
+            <h2>🔍 API Endpoints (9 Total)</h2>
+            <p class="description">API cung cấp 9 endpoints đa dạng cho mọi nhu cầu về videos.</p>
+        </div>
+
+        <!-- List Videos -->
+        <div class="card">
+            <div class="endpoint-card">
+                <div class="endpoint-title">
+                    <span class="method get">GET</span>
+                    Danh Sách Videos
+                </div>
+                
+                <div class="url">GET https://vidsrv.com/video/api.php?action=list</div>
+                
+                <p class="description">
+                    Lấy danh sách videos với filtering, searching, sorting và pagination. Hỗ trợ 21 query parameters để filter theo character, resolution, pose, outfit, background, quality và nhiều tiêu chí khác.
+                </p>
+
+                <h3>Query Parameters (21 total)</h3>
+                <table class="params-table">
+                    <thead>
+                        <tr>
+                            <th>Tên</th>
+                            <th>Type</th>
+                            <th>Mô tả</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="param-name">action</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Giá trị: <code>list</code> (required)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">character_id</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Lọc theo character ID (optional)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">type</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Lọc theo loại video (optional)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">action_filter</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Lọc theo action/hành động (optional)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">gender</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Lọc theo giới tính character (optional)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">quality</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Lọc theo chất lượng (low/medium/high) (optional)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">speed</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Lọc theo tốc độ (slow/normal/fast) (optional)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">style</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Lọc theo character style (optional)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">width</span></td>
+                            <td><span class="param-type">integer</span></td>
+                            <td>Lọc theo chiều rộng video (pixels) (optional)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">height</span></td>
+                            <td><span class="param-type">integer</span></td>
+                            <td>Lọc theo chiều cao video (pixels) (optional)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">pose</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Lọc theo character pose (optional)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">outfit</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Lọc theo trang phục/outfit (optional)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">background</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Lọc theo background/scene (optional)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">performance_mode</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Lọc theo performance mode (optional)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">has_error</span></td>
+                            <td><span class="param-type">boolean</span></td>
+                            <td>true: chỉ videos có error, false: videos không error (optional)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">is_enhanced</span></td>
+                            <td><span class="param-type">boolean</span></td>
+                            <td>Lọc videos đã AI-enhanced (optional)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">min_duration</span></td>
+                            <td><span class="param-type">integer</span></td>
+                            <td>Duration tối thiểu (giây) (optional)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">max_duration</span></td>
+                            <td><span class="param-type">integer</span></td>
+                            <td>Duration tối đa (giây) (optional)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">search</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Tìm kiếm theo character name, action, custom prompt (optional)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">sort_by</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>created_at, character_name, type, action, duration, quality (default: created_at)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">sort_order</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>ASC hoặc DESC (default: DESC)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">page</span></td>
+                            <td><span class="param-type">integer</span></td>
+                            <td>Trang hiện tại (default: 1)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">limit</span></td>
+                            <td><span class="param-type">integer</span></td>
+                            <td>Số videos/trang, 1-100 (default: 20)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="example-title">📌 Ví dụ:</div>
+                <pre><code>// Tất cả videos, 10 items/page
+GET https://vidsrv.com/video/api.php?action=list&limit=10
+
+// Lọc theo character và action
+GET https://vidsrv.com/video/api.php?action=list&character_id=abc123&action_filter=dancing
+
+// Chỉ videos không lỗi, quality cao
+GET https://vidsrv.com/video/api.php?action=list&has_error=false&quality=high
+
+// Duration từ 5-15 giây
+GET https://vidsrv.com/video/api.php?action=list&min_duration=5&max_duration=15
+
+// Lọc theo resolution 1920x1080
+GET https://vidsrv.com/video/api.php?action=list&width=1920&height=1080
+
+// Lọc theo outfit và background
+GET https://vidsrv.com/video/api.php?action=list&outfit=casual&background=park
+
+// Lọc theo pose và performance mode
+GET https://vidsrv.com/video/api.php?action=list&pose=standing&performance_mode=fast
+
+// Search và sort
+GET https://vidsrv.com/video/api.php?action=list&search=running&sort_by=duration&sort_order=ASC
+
+// Kết hợp nhiều filters
+GET https://vidsrv.com/video/api.php?action=list&character_id=char123&quality=high&width=1920&is_enhanced=true&has_error=false</code></pre>
+
+                <div class="example-title">✅ Response (200 OK):</div>
+                <pre><code>{
+  "success": true,
+  "data": [
+    {
+      "id": "vid_abc123",
+      "character_id": "char_xyz",
+      "character_name": "Sakura",
+      "character_gender": "female",
+      "video_url": "https://...",
+      "type": "animation",
+      "action": "dancing",
+      "quality": "high",
+      "width": 1920,
+      "height": 1080,
+      "duration": 10,
+      "is_enhanced": true,
+      "created_at": "2025-12-02 10:00:00"
+    }
+  ],
+  "pagination": {
+    "total": 150,
+    "page": 1,
+    "limit": 20,
+    "total_pages": 8
+  }
+}</code></pre>
+            </div>
+        </div>
+
+        <!-- Get Single Video -->
+        <div class="card">
+            <div class="endpoint-card">
+                <div class="endpoint-title">
+                    <span class="method get">GET</span>
+                    Chi Tiết Video
+                </div>
+                
+                <div class="url">GET https://vidsrv.com/video/api.php?action=get&id={video_id}</div>
+                
+                <p class="description">
+                    Lấy thông tin chi tiết của một video theo ID.
+                </p>
+
+                <h3>Query Parameters</h3>
+                <table class="params-table">
+                    <thead>
+                        <tr>
+                            <th>Tên</th>
+                            <th>Type</th>
+                            <th>Mô tả</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="param-name">action</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Giá trị: <code>get</code></td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">id</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Video ID (bắt buộc)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="example-title">📌 Ví dụ:</div>
+                <pre><code>GET https://vidsrv.com/video/api.php?action=get&id=vid_abc123</code></pre>
+
+                <div class="example-title">✅ Response (200 OK):</div>
+                <pre><code>{
+  "success": true,
+  "data": {
+    "id": "vid_abc123",
+    "character_id": "char_xyz",
+    "character_name": "Sakura",
+    "video_url": "https://...",
+    "type": "animation",
+    "action": "dancing",
+    "outfit": "casual",
+    "background": "park",
+    "duration": 10,
+    "custom_prompt": "...",
+    "created_at": "2025-12-02 10:00:00"
+  }
+}</code></pre>
+
+                <div class="example-title">❌ Error (404):</div>
+                <pre><code>{
+  "success": false,
+  "error": "Video not found"
+}</code></pre>
+            </div>
+        </div>
+
+        <!-- Statistics -->
+        <div class="card">
+            <div class="endpoint-card">
+                <div class="endpoint-title">
+                    <span class="method get">GET</span>
+                    Thống Kê & Analytics
+                </div>
+                
+                <div class="url">GET https://vidsrv.com/video/api.php?action=stats</div>
+                
+                <p class="description">
+                    Lấy thống kê toàn diện: tổng số, phân bổ theo type/action/gender, top characters, duration stats, error rate.
+                </p>
+
+                <div class="example-title">✅ Response (200 OK):</div>
+                <pre><code>{
+  "success": true,
+  "data": {
+    "total_videos": 5234,
+    "by_type": [
+      {"type": "animation", "count": 3200},
+      {"type": "live-action", "count": 2034}
+    ],
+    "by_action": [
+      {"action": "dancing", "count": 890},
+      {"action": "running", "count": 567}
+    ],
+    "by_gender": [...],
+    "by_quality": [...],
+    "by_style": [...],
+    "duration_stats": {
+      "average": 12.5,
+      "min": 3,
+      "max": 60
+    },
+    "top_characters": [
+      {
+        "character_id": "...",
+        "character_name": "Sakura",
+        "video_count": 45
+      }
+    ],
+    "recent": [...],
+    "error_stats": {
+      "total_errors": 123,
+      "total_success": 5111,
+      "error_rate": 2.35
+    },
+    "enhancement_stats": {
+      "enhanced": 4500,
+      "not_enhanced": 734,
+      "enhancement_rate": 85.97
+    }
+  }
+}</code></pre>
+            </div>
+        </div>
+
+        <!-- Random Video -->
+        <div class="card">
+            <div class="endpoint-card">
+                <div class="endpoint-title">
+                    <span class="method get">GET</span>
+                    Video Ngẫu Nhiên
+                </div>
+                
+                <div class="url">GET https://vidsrv.com/video/api.php?action=random</div>
+                
+                <p class="description">
+                    Lấy một video ngẫu nhiên. Hỗ trợ filters (character_id, type, action, gender, quality, style, no_errors).
+                </p>
+
+                <h3>Query Parameters</h3>
+                <table class="params-table">
+                    <thead>
+                        <tr>
+                            <th>Tên</th>
+                            <th>Type</th>
+                            <th>Mô tả</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="param-name">action</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Giá trị: <code>random</code></td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">character_id</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Lọc theo character (optional)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">type</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Lọc theo type (optional)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">action_filter</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Lọc theo action (optional)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">no_errors</span></td>
+                            <td><span class="param-type">boolean</span></td>
+                            <td>true: chỉ lấy videos không lỗi (optional)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="example-title">📌 Ví dụ:</div>
+                <pre><code>// Random bất kỳ
+GET https://vidsrv.com/video/api.php?action=random
+
+// Random dancing, no errors
+GET https://vidsrv.com/video/api.php?action=random&action_filter=dancing&no_errors=true</code></pre>
+            </div>
+        </div>
+
+        <!-- Similar Videos -->
+        <div class="card">
+            <div class="endpoint-card">
+                <div class="endpoint-title">
+                    <span class="method get">GET</span>
+                    Videos Tương Tự
+                </div>
+                
+                <div class="url">GET https://vidsrv.com/video/api.php?action=similar&id={video_id}</div>
+                
+                <p class="description">
+                    Tìm videos tương tự dựa trên similarity scoring: same character (5pts), type (3pts), action (2pts), style (2pts), gender (1pt).
+                </p>
+
+                <h3>Query Parameters</h3>
+                <table class="params-table">
+                    <thead>
+                        <tr>
+                            <th>Tên</th>
+                            <th>Type</th>
+                            <th>Mô tả</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="param-name">action</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Giá trị: <code>similar</code></td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">id</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Video ID (bắt buộc)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="example-title">📌 Ví dụ:</div>
+                <pre><code>GET https://vidsrv.com/video/api.php?action=similar&id=vid_abc123</code></pre>
+
+                <div class="example-title">✅ Response:</div>
+                <pre><code>{
+  "success": true,
+  "data": [...],
+  "reference_video": {
+    "id": "vid_abc123",
+    "character_name": "Sakura",
+    "action": "dancing",
+    "type": "animation"
+  }
+}</code></pre>
+            </div>
+        </div>
+
+        <!-- Suggestions -->
+        <div class="card">
+            <div class="endpoint-card">
+                <div class="endpoint-title">
+                    <span class="method get">GET</span>
+                    Gợi Ý Tìm Kiếm (Autocomplete)
+                </div>
+                
+                <div class="url">GET https://vidsrv.com/video/api.php?action=suggest&q={query}</div>
+                
+                <p class="description">
+                    Autocomplete suggestions cho character names hoặc actions. Prefix matching.
+                </p>
+
+                <h3>Query Parameters</h3>
+                <table class="params-table">
+                    <thead>
+                        <tr>
+                            <th>Tên</th>
+                            <th>Type</th>
+                            <th>Mô tả</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="param-name">action</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Giá trị: <code>suggest</code></td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">q</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Query string (bắt buộc)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">field</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>character_name hoặc action (mặc định: character_name)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">limit</span></td>
+                            <td><span class="param-type">integer</span></td>
+                            <td>Số kết quả (1-20, mặc định: 10)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="example-title">📌 Ví dụ:</div>
+                <pre><code>// Suggest character names
+GET https://vidsrv.com/video/api.php?action=suggest&q=sak&field=character_name
+
+// Suggest actions
+GET https://vidsrv.com/video/api.php?action=suggest&q=dan&field=action&limit=5</code></pre>
+
+                <div class="example-title">✅ Response:</div>
+                <pre><code>{
+  "success": true,
+  "data": [
+    {
+      "suggestion": "Sakura",
+      "character_id": "...",
+      "character_gender": "female",
+      "character_style": "anime"
+    }
+  ],
+  "query": "sak",
+  "field": "character_name",
+  "count": 1
+}</code></pre>
+            </div>
+        </div>
+
+        <!-- Popular Tags -->
+        <div class="card">
+            <div class="endpoint-card">
+                <div class="endpoint-title">
+                    <span class="method get">GET</span>
+                    Tags Phổ Biến
+                </div>
+                
+                <div class="url">GET https://vidsrv.com/video/api.php?action=tags</div>
+                
+                <p class="description">
+                    Phân tích các tags phổ biến: actions, types, outfits, backgrounds, speed, quality.
+                </p>
+
+                <h3>Query Parameters</h3>
+                <table class="params-table">
+                    <thead>
+                        <tr>
+                            <th>Tên</th>
+                            <th>Type</th>
+                            <th>Mô tả</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="param-name">action</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Giá trị: <code>tags</code></td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">type</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>action, type, outfit, background, speed, quality (mặc định: action)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">limit</span></td>
+                            <td><span class="param-type">integer</span></td>
+                            <td>Số tags (1-100, mặc định: 50)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="example-title">📌 Ví dụ:</div>
+                <pre><code>// Popular actions
+GET https://vidsrv.com/video/api.php?action=tags&type=action&limit=20
+
+// Popular outfits
+GET https://vidsrv.com/video/api.php?action=tags&type=outfit</code></pre>
+
+                <div class="example-title">✅ Response:</div>
+                <pre><code>{
+  "success": true,
+  "data": [
+    {"tag": "dancing", "count": 890},
+    {"tag": "running", "count": 567},
+    {"tag": "jumping", "count": 445}
+  ],
+  "type": "action",
+  "total_unique_tags": 20
+}</code></pre>
+            </div>
+        </div>
+
+        <!-- Trending Videos -->
+        <div class="card">
+            <div class="endpoint-card">
+                <div class="endpoint-title">
+                    <span class="method get">GET</span>
+                    Videos Trending (Mới Nhất)
+                </div>
+                
+                <div class="url">GET https://vidsrv.com/video/api.php?action=trending</div>
+                
+                <p class="description">
+                    Lấy videos mới nhất trong N ngày qua. Chỉ lấy videos không lỗi.
+                </p>
+
+                <h3>Query Parameters</h3>
+                <table class="params-table">
+                    <thead>
+                        <tr>
+                            <th>Tên</th>
+                            <th>Type</th>
+                            <th>Mô tả</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="param-name">action</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Giá trị: <code>trending</code></td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">limit</span></td>
+                            <td><span class="param-type">integer</span></td>
+                            <td>Số kết quả (1-50, mặc định: 20)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">days</span></td>
+                            <td><span class="param-type">integer</span></td>
+                            <td>Khoảng thời gian (1-90, mặc định: 7)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="example-title">📌 Ví dụ:</div>
+                <pre><code>// Trending 7 ngày
+GET https://vidsrv.com/video/api.php?action=trending
+
+// Trending 30 ngày, top 10
+GET https://vidsrv.com/video/api.php?action=trending&days=30&limit=10</code></pre>
+            </div>
+        </div>
+
+        <!-- Batch Get -->
+        <div class="card">
+            <div class="endpoint-card">
+                <div class="endpoint-title">
+                    <span class="method get">GET</span>
+                    Lấy Nhiều Videos (Batch)
+                </div>
+                
+                <div class="url">GET https://vidsrv.com/video/api.php?action=batch&ids={id1,id2,id3}</div>
+                
+                <p class="description">
+                    Lấy nhiều videos cùng lúc (max 50 IDs). Perfect cho cart/playlist.
+                </p>
+
+                <h3>Query Parameters</h3>
+                <table class="params-table">
+                    <thead>
+                        <tr>
+                            <th>Tên</th>
+                            <th>Type</th>
+                            <th>Mô tả</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="param-name">action</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Giá trị: <code>batch</code></td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">ids</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Danh sách IDs cách nhau bởi dấu phẩy (bắt buộc, max 50)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="example-title">📌 Ví dụ:</div>
+                <pre><code>GET https://vidsrv.com/video/api.php?action=batch&ids=vid1,vid2,vid3</code></pre>
+
+                <div class="example-title">✅ Response:</div>
+                <pre><code>{
+  "success": true,
+  "data": [...],
+  "requested": 3,
+  "found": 3
+}</code></pre>
+            </div>
+        </div>
+
+        <!-- Error Responses -->
+        <div class="card">
+            <h2>⚠️ Error Responses</h2>
+            <p class="description">
+                Tất cả errors trả về format JSON với <code>success: false</code> và HTTP status code tương ứng.
+            </p>
+
+            <div class="example-title">❌ 400 Bad Request:</div>
+            <pre><code>{
+  "success": false,
+  "error": "Query parameter \"q\" is required"
+}</code></pre>
+
+            <div class="example-title">❌ 404 Not Found:</div>
+            <pre><code>{
+  "success": false,
+  "error": "Video not found"
+}</code></pre>
+
+            <div class="example-title">❌ 500 Internal Server Error:</div>
+            <pre><code>{
+  "success": false,
+  "error": "Database connection failed"
+}</code></pre>
+        </div>
+
+        <!-- Response Format -->
+        <div class="card">
+            <h2>📦 Response Format</h2>
+            <p class="description">
+                Tất cả responses sử dụng JSON format với UTF-8 encoding (không escape Unicode).
+            </p>
+            <ul style="list-style: none; padding: 0; color: #b0b0b0; line-height: 1.8;">
+                <li>✓ <code>Content-Type: application/json; charset=utf-8</code></li>
+                <li>✓ <code>JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES</code></li>
+                <li>✓ Loại bỏ null và empty fields</li>
+                <li>✓ Type casting (int, bool) tự động</li>
+                <li>✓ CORS enabled</li>
+            </ul>
+        </div>
+
+        <!-- Performance & Best Practices -->
+        <div class="card">
+            <h2>⚡ Performance & Security</h2>
+            <h3>Performance Optimizations</h3>
+            <ul style="list-style: none; padding: 0; color: #b0b0b0; line-height: 1.8; margin-bottom: 1.5rem;">
+                <li>✓ <strong>SQL_CALC_FOUND_ROWS:</strong> Single query for data + count</li>
+                <li>✓ <strong>Persistent Connections:</strong> PDO::ATTR_PERSISTENT = true</li>
+                <li>✓ <strong>Prepared Statements:</strong> All queries use PDO prepared statements</li>
+                <li>✓ <strong>Efficient Pagination:</strong> LIMIT/OFFSET với total_pages calculation</li>
+                <li>✓ <strong>Smart Filtering:</strong> Dynamic WHERE clause building</li>
+                <li>✓ <strong>Type Casting:</strong> Convert types in PHP để giảm overhead</li>
+            </ul>
+
+            <h3>Security Features</h3>
+            <ul style="list-style: none; padding: 0; color: #b0b0b0; line-height: 1.8; margin-bottom: 1.5rem;">
+                <li>✓ <strong>SQL Injection Protection:</strong> PDO prepared statements với EMULATE_PREPARES = false</li>
+                <li>✓ <strong>Input Validation:</strong> Type checking và validation cho tất cả parameters</li>
+                <li>✓ <strong>Error Handling:</strong> Try-catch blocks với appropriate HTTP status codes</li>
+                <li>✓ <strong>CORS Headers:</strong> Configured cho cross-origin requests</li>
+                <li>✓ <strong>Parameter Limits:</strong> Max limits cho pagination, batch operations</li>
+            </ul>
+
+            <h3>Best Practices</h3>
+            <ul style="list-style: none; padding: 0; color: #b0b0b0; line-height: 1.8;">
+                <li>✓ Always validate input parameters trước khi query</li>
+                <li>✓ Use appropriate filters để giảm data transfer</li>
+                <li>✓ Implement pagination cho large datasets (limit max 100)</li>
+                <li>✓ Cache responses khi có thể (stats, tags, trending)</li>
+                <li>✓ Handle errors gracefully với try-catch</li>
+                <li>✓ Use batch endpoint thay vì multiple single requests</li>
+            </ul>
+        </div>
+
+        <!-- Field Reference -->
+        <div class="card">
+            <h2>📋 Video Fields Reference</h2>
+            <p class="description">
+                Danh sách đầy đủ 27 fields trong videos table:
+            </p>
+            <table class="params-table" style="margin-top: 1rem;">
+                <thead>
+                    <tr>
+                        <th>Field</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>id</code></td><td>string</td><td>Unique video ID (PRIMARY KEY)</td></tr>
+                    <tr><td><code>character_id</code></td><td>string</td><td>Foreign key to characters table</td></tr>
+                    <tr><td><code>character_name</code></td><td>string</td><td>Character display name</td></tr>
+                    <tr><td><code>character_gender</code></td><td>string</td><td>Character gender (male/female/other)</td></tr>
+                    <tr><td><code>character_style</code></td><td>string</td><td>Character style (anime/realistic/cartoon)</td></tr>
+                    <tr><td><code>pack_id</code></td><td>string</td><td>Video pack identifier</td></tr>
+                    <tr><td><code>video_url</code></td><td>text</td><td>URL to video file</td></tr>
+                    <tr><td><code>trigger_run_id</code></td><td>string</td><td>Generation trigger ID</td></tr>
+                    <tr><td><code>input_image_url</code></td><td>text</td><td>Source image URL</td></tr>
+                    <tr><td><code>error</code></td><td>text</td><td>Error message if generation failed</td></tr>
+                    <tr><td><code>quality</code></td><td>string</td><td>Video quality (low/medium/high)</td></tr>
+                    <tr><td><code>created_at</code></td><td>text</td><td>Creation timestamp</td></tr>
+                    <tr><td><code>type</code></td><td>string</td><td>Video type/category</td></tr>
+                    <tr><td><code>width</code></td><td>integer</td><td>Video width in pixels</td></tr>
+                    <tr><td><code>height</code></td><td>integer</td><td>Video height in pixels</td></tr>
+                    <tr><td><code>is_enhanced</code></td><td>boolean</td><td>Whether video is AI-enhanced</td></tr>
+                    <tr><td><code>allowed_for_community</code></td><td>string</td><td>Community visibility setting</td></tr>
+                    <tr><td><code>pose</code></td><td>text</td><td>Character pose description</td></tr>
+                    <tr><td><code>speed</code></td><td>string</td><td>Animation speed (slow/normal/fast)</td></tr>
+                    <tr><td><code>action</code></td><td>string</td><td>Action being performed</td></tr>
+                    <tr><td><code>outfit</code></td><td>string</td><td>Character outfit/clothing</td></tr>
+                    <tr><td><code>duration</code></td><td>integer</td><td>Video duration in seconds</td></tr>
+                    <tr><td><code>background</code></td><td>string</td><td>Background/scene description</td></tr>
+                    <tr><td><code>custom_prompt</code></td><td>text</td><td>Custom generation prompt</td></tr>
+                    <tr><td><code>original_prompt</code></td><td>text</td><td>Original user prompt</td></tr>
+                    <tr><td><code>enhanced_prompt</code></td><td>text</td><td>AI-enhanced prompt</td></tr>
+                    <tr><td><code>performance_mode</code></td><td>string</td><td>Generation performance mode</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

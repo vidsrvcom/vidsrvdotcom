@@ -1,0 +1,1436 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Images API - Comprehensive Documentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        .animated-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .gradient-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            animation: float 25s infinite ease-in-out;
+        }
+        .orb-1 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(52, 211, 153, 0.3) 0%, transparent 70%);
+            top: -15%;
+            left: -15%;
+        }
+        .orb-2 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.25) 0%, transparent 70%);
+            bottom: -15%;
+            right: -15%;
+            animation-delay: 10s;
+        }
+        .orb-3 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(34, 197, 94, 0.25) 0%, transparent 70%);
+            top: 40%;
+            right: 20%;
+            animation-delay: 17s;
+        }
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(40px, -40px) scale(1.15); }
+            66% { transform: translate(-30px, 30px) scale(0.85); }
+        }
+        
+        .container {
+            position: relative;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+            z-index: 1;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #34D399 0%, #10B981 50%, #22C55E 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.03em;
+        }
+        
+        .header-subtitle {
+            font-size: 1.3rem;
+            color: #909090;
+            margin-bottom: 2rem;
+        }
+        
+        .quick-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+        
+        .quick-nav a {
+            padding: 0.7rem 1.5rem;
+            background: rgba(20, 20, 20, 0.7);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 12px;
+            color: #10B981;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+        
+        .quick-nav a:hover {
+            background: rgba(16, 185, 129, 0.15);
+            border-color: #10B981;
+            transform: translateY(-2px);
+        }
+        
+        .section {
+            background: rgba(20, 20, 20, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+        
+        h2 {
+            color: #10B981;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid rgba(16, 185, 129, 0.3);
+        }
+        
+        h3 {
+            color: #34D399;
+            font-size: 1.5rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        h4 {
+            color: #22C55E;
+            font-size: 1.2rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .endpoint {
+            background: rgba(15, 15, 15, 0.8);
+            border-left: 4px solid #10B981;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+        
+        .endpoint-title {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .method {
+            padding: 0.4rem 0.9rem;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            letter-spacing: 0.05em;
+        }
+        
+        .method.get {
+            background: rgba(52, 211, 153, 0.2);
+            color: #34D399;
+            border: 1px solid #10B981;
+        }
+        
+        .endpoint-path {
+            font-family: 'Courier New', monospace;
+            color: #b0b0b0;
+            font-size: 1.1rem;
+        }
+        
+        .param-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: rgba(10, 10, 10, 0.5);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .param-table th {
+            background: rgba(16, 185, 129, 0.15);
+            color: #34D399;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid rgba(16, 185, 129, 0.3);
+        }
+        
+        .param-table td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .param-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .param-name {
+            color: #34D399;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+        }
+        
+        .param-type {
+            color: #22C55E;
+            font-style: italic;
+        }
+        
+        .param-required {
+            color: #ef4444;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .param-optional {
+            color: #64748b;
+            font-size: 0.85rem;
+        }
+        
+        code {
+            background: rgba(16, 185, 129, 0.1);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #34D399;
+            font-size: 0.95em;
+        }
+        
+        pre {
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 8px;
+            padding: 1.5rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+            color: #10B981;
+        }
+        
+        .example-request {
+            background: rgba(16, 185, 129, 0.05);
+            border-left: 4px solid #10B981;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 6px;
+        }
+        
+        .note {
+            background: rgba(52, 211, 153, 0.1);
+            border-left: 4px solid #34D399;
+            padding: 1.2rem;
+            margin: 1rem 0;
+            border-radius: 6px;
+        }
+        
+        .note-title {
+            color: #34D399;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        ul, ol {
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        li {
+            margin-bottom: 0.5rem;
+            color: #b0b0b0;
+        }
+        
+        a {
+            color: #10B981;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        a:hover {
+            color: #34D399;
+            text-decoration: underline;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 0.3rem 0.7rem;
+            background: rgba(16, 185, 129, 0.2);
+            color: #34D399;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+        
+        .field-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: rgba(10, 10, 10, 0.5);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .field-table th {
+            background: rgba(16, 185, 129, 0.15);
+            color: #34D399;
+            padding: 0.9rem;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid rgba(16, 185, 129, 0.3);
+        }
+        
+        .field-table td {
+            padding: 0.8rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.95rem;
+        }
+        
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            background: rgba(16, 185, 129, 0.9);
+            color: white;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
+            transition: all 0.3s;
+            z-index: 100;
+        }
+        
+        .back-to-top:hover {
+            background: #10B981;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(16, 185, 129, 0.6);
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-background">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1>Images API Documentation</h1>
+            <p class="header-subtitle">
+                Complete RESTful API cho quản lý AI-generated images<br>
+                <strong>21 Fields</strong> • <strong>9 Endpoints</strong> • <strong>13 Query Parameters</strong>
+            </p>
+            
+            <div class="quick-nav">
+                <a href="#overview">Overview</a>
+                <a href="#endpoints">Endpoints</a>
+                <a href="#parameters">Parameters</a>
+                <a href="#examples">Examples</a>
+                <a href="#fields">Field Reference</a>
+                <a href="#performance">Performance</a>
+            </div>
+        </header>
+
+        <!-- OVERVIEW -->
+        <section id="overview" class="section">
+            <h2>📖 Overview</h2>
+            <p>
+                Images API cung cấp interface hoàn chỉnh để truy vấn và quản lý AI-generated images.
+                API hỗ trợ filtering mạnh mẽ, full-text search, similarity scoring, và batch operations.
+            </p>
+            
+            <h3>Base URL</h3>
+            <pre><code>https://vidsrv.com/image/api.php</code></pre>
+            
+            <h3>Key Features</h3>
+            <ul>
+                <li><strong>9 Endpoints</strong>: List, Get, Stats, Random, Similar, Suggest, Tags, Trending, Batch</li>
+                <li><strong>13 Query Parameters</strong>: Filtering theo character, gender, style, pose, outfit, background, resolution</li>
+                <li><strong>21 Fields</strong>: Comprehensive image data bao gồm metadata, resolution, style info</li>
+                <li><strong>Full-text Search</strong>: Search theo character name, pose, outfit, background</li>
+                <li><strong>Similarity Scoring</strong>: Tìm images tương tự dựa trên weighted scoring algorithm</li>
+                <li><strong>Performance Optimized</strong>: Persistent connections, prepared statements, separate COUNT queries</li>
+            </ul>
+
+            <div class="note">
+                <div class="note-title">🔒 Security</div>
+                <p>
+                    API sử dụng PDO prepared statements với <code>ATTR_EMULATE_PREPARES = false</code> 
+                    để bảo vệ khỏi SQL injection. Tất cả inputs đều được validate và sanitize.
+                </p>
+            </div>
+        </section>
+
+        <!-- ENDPOINTS -->
+        <section id="endpoints" class="section">
+            <h2>🔌 Endpoints</h2>
+
+            <!-- 1. LIST -->
+            <div class="endpoint">
+                <div class="endpoint-title">
+                    <span class="method get">GET</span>
+                    <span class="endpoint-path">/api.php?action=list</span>
+                </div>
+                <p>
+                    Lấy danh sách images với pagination và filtering mạnh mẽ. Hỗ trợ 13 query parameters
+                    để filter theo character, gender, style, pose, outfit, background, resolution, và community status.
+                </p>
+                
+                <h4>Parameters</h4>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                            <th>Default</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="param-name">character_id</td>
+                            <td class="param-type">varchar</td>
+                            <td>Filter theo character ID <span class="param-optional">optional</span></td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td class="param-name">gender</td>
+                            <td class="param-type">string</td>
+                            <td>Filter theo gender <span class="param-optional">optional</span></td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td class="param-name">style</td>
+                            <td class="param-type">string</td>
+                            <td>Filter theo style <span class="param-optional">optional</span></td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td class="param-name">width</td>
+                            <td class="param-type">int</td>
+                            <td>Filter theo exact width <span class="param-optional">optional</span></td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td class="param-name">height</td>
+                            <td class="param-type">int</td>
+                            <td>Filter theo exact height <span class="param-optional">optional</span></td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td class="param-name">pose</td>
+                            <td class="param-type">string</td>
+                            <td>Filter theo pose <span class="param-optional">optional</span></td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td class="param-name">outfit</td>
+                            <td class="param-type">string</td>
+                            <td>Filter theo outfit <span class="param-optional">optional</span></td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td class="param-name">background</td>
+                            <td class="param-type">string</td>
+                            <td>Filter theo background <span class="param-optional">optional</span></td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td class="param-name">allowed_for_community</td>
+                            <td class="param-type">boolean</td>
+                            <td>Filter theo community status (1/0) <span class="param-optional">optional</span></td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td class="param-name">search</td>
+                            <td class="param-type">string</td>
+                            <td>Full-text search trên character, pose, outfit, background <span class="param-optional">optional</span></td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td class="param-name">sort_by</td>
+                            <td class="param-type">string</td>
+                            <td>Sort field: id, character_id, width, height <span class="param-optional">optional</span></td>
+                            <td>id</td>
+                        </tr>
+                        <tr>
+                            <td class="param-name">sort_order</td>
+                            <td class="param-type">string</td>
+                            <td>Sort direction: ASC, DESC <span class="param-optional">optional</span></td>
+                            <td>DESC</td>
+                        </tr>
+                        <tr>
+                            <td class="param-name">page</td>
+                            <td class="param-type">int</td>
+                            <td>Page number (1-based) <span class="param-optional">optional</span></td>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <td class="param-name">limit</td>
+                            <td class="param-type">int</td>
+                            <td>Items per page (1-100) <span class="param-optional">optional</span></td>
+                            <td>20</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="example-request">
+                    <strong>Example Request:</strong>
+                    <pre><code>GET /api.php?action=list&character_id=char123&gender=female&style=anime&pose=standing&limit=10&page=1</code></pre>
+                </div>
+
+                <h4>Response</h4>
+                <pre><code>{
+    "success": true,
+    "data": [
+        {
+            "id": "img_001",
+            "character_id": "char123",
+            "character_name": "Mai Sakurajima",
+            "gender": "female",
+            "style": "anime",
+            "width": 1024,
+            "height": 1024,
+            "pose": "standing",
+            "outfit": "school_uniform",
+            "background": "classroom",
+            "allowed_for_community": 1,
+            "url": "https://..."
+            // ... 21 fields total
+        }
+    ],
+    "pagination": {
+        "page": 1,
+        "limit": 10,
+        "total": 156,
+        "total_pages": 16
+    }
+}</code></pre>
+            </div>
+
+            <!-- 2. GET -->
+            <div class="endpoint">
+                <div class="endpoint-title">
+                    <span class="method get">GET</span>
+                    <span class="endpoint-path">/api.php?action=get</span>
+                </div>
+                <p>Lấy thông tin chi tiết của một image duy nhất theo ID.</p>
+                
+                <h4>Parameters</h4>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="param-name">id</td>
+                            <td class="param-type">varchar</td>
+                            <td>Image ID <span class="param-required">required</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="example-request">
+                    <strong>Example Request:</strong>
+                    <pre><code>GET /api.php?action=get&id=img_001</code></pre>
+                </div>
+
+                <h4>Response</h4>
+                <pre><code>{
+    "success": true,
+    "data": {
+        "id": "img_001",
+        "character_id": "char123",
+        "character_name": "Mai Sakurajima",
+        "gender": "female",
+        "style": "anime",
+        "width": 1024,
+        "height": 1024,
+        "pose": "standing",
+        "outfit": "school_uniform",
+        "background": "classroom",
+        "allowed_for_community": 1,
+        "url": "https://...",
+        "created_at": "2024-01-15 10:30:00"
+        // ... all 21 fields
+    }
+}</code></pre>
+            </div>
+
+            <!-- 3. STATS -->
+            <div class="endpoint">
+                <div class="endpoint-title">
+                    <span class="method get">GET</span>
+                    <span class="endpoint-path">/api.php?action=stats</span>
+                </div>
+                <p>Lấy thống kê toàn diện về images trong database.</p>
+                
+                <div class="example-request">
+                    <strong>Example Request:</strong>
+                    <pre><code>GET /api.php?action=stats</code></pre>
+                </div>
+
+                <h4>Response</h4>
+                <pre><code>{
+    "success": true,
+    "data": {
+        "total_images": 1543,
+        "by_gender": {
+            "female": 876,
+            "male": 532,
+            "other": 135
+        },
+        "by_style": {
+            "anime": 945,
+            "realistic": 398,
+            "fantasy": 200
+        },
+        "by_pose": {
+            "standing": 654,
+            "sitting": 423,
+            "action": 287
+        },
+        "by_outfit": {
+            "casual": 567,
+            "school_uniform": 432,
+            "fantasy": 298
+        },
+        "resolution_stats": {
+            "avg_width": 1024.5,
+            "avg_height": 1024.3,
+            "min_width": 512,
+            "max_width": 2048
+        },
+        "top_characters": [
+            {"character_id": "char123", "character_name": "Mai", "count": 45},
+            {"character_id": "char456", "character_name": "Asuna", "count": 38}
+        ],
+        "recent": 127
+    }
+}</code></pre>
+            </div>
+
+            <!-- 4. RANDOM -->
+            <div class="endpoint">
+                <div class="endpoint-title">
+                    <span class="method get">GET</span>
+                    <span class="endpoint-path">/api.php?action=random</span>
+                </div>
+                <p>Lấy một image ngẫu nhiên. Có thể filter theo các tiêu chí.</p>
+                
+                <h4>Parameters</h4>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="param-name">character_id</td>
+                            <td class="param-type">varchar</td>
+                            <td>Filter theo character <span class="param-optional">optional</span></td>
+                        </tr>
+                        <tr>
+                            <td class="param-name">gender</td>
+                            <td class="param-type">string</td>
+                            <td>Filter theo gender <span class="param-optional">optional</span></td>
+                        </tr>
+                        <tr>
+                            <td class="param-name">style</td>
+                            <td class="param-type">string</td>
+                            <td>Filter theo style <span class="param-optional">optional</span></td>
+                        </tr>
+                        <tr>
+                            <td class="param-name">pose</td>
+                            <td class="param-type">string</td>
+                            <td>Filter theo pose <span class="param-optional">optional</span></td>
+                        </tr>
+                        <tr>
+                            <td class="param-name">outfit</td>
+                            <td class="param-type">string</td>
+                            <td>Filter theo outfit <span class="param-optional">optional</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="example-request">
+                    <strong>Example Request:</strong>
+                    <pre><code>GET /api.php?action=random&gender=female&style=anime</code></pre>
+                </div>
+            </div>
+
+            <!-- 5. SIMILAR -->
+            <div class="endpoint">
+                <div class="endpoint-title">
+                    <span class="method get">GET</span>
+                    <span class="endpoint-path">/api.php?action=similar</span>
+                </div>
+                <p>Tìm images tương tự dựa trên similarity scoring algorithm.</p>
+                
+                <h4>Scoring Algorithm</h4>
+                <ul>
+                    <li><strong>Character ID match:</strong> +5 points</li>
+                    <li><strong>Pose match:</strong> +3 points</li>
+                    <li><strong>Outfit match:</strong> +2 points</li>
+                    <li><strong>Style match:</strong> +2 points</li>
+                    <li><strong>Gender match:</strong> +1 point</li>
+                </ul>
+                
+                <h4>Parameters</h4>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                            <th>Default</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="param-name">id</td>
+                            <td class="param-type">varchar</td>
+                            <td>Image ID để tìm similar <span class="param-required">required</span></td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td class="param-name">limit</td>
+                            <td class="param-type">int</td>
+                            <td>Số lượng kết quả (1-50) <span class="param-optional">optional</span></td>
+                            <td>20</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="example-request">
+                    <strong>Example Request:</strong>
+                    <pre><code>GET /api.php?action=similar&id=img_001&limit=10</code></pre>
+                </div>
+
+                <h4>Response</h4>
+                <pre><code>{
+    "success": true,
+    "data": [
+        {
+            "id": "img_045",
+            "character_id": "char123",
+            "similarity_score": 11,
+            // ... all image fields
+        },
+        {
+            "id": "img_078",
+            "character_id": "char123",
+            "similarity_score": 8,
+            // ...
+        }
+    ]
+}</code></pre>
+            </div>
+
+            <!-- 6. SUGGEST -->
+            <div class="endpoint">
+                <div class="endpoint-title">
+                    <span class="method get">GET</span>
+                    <span class="endpoint-path">/api.php?action=suggest</span>
+                </div>
+                <p>Autocomplete suggestions cho pose, outfit, hoặc background fields.</p>
+                
+                <h4>Parameters</h4>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                            <th>Default</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="param-name">field</td>
+                            <td class="param-type">string</td>
+                            <td>Field name: pose, outfit, background <span class="param-required">required</span></td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td class="param-name">q</td>
+                            <td class="param-type">string</td>
+                            <td>Search prefix <span class="param-optional">optional</span></td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td class="param-name">limit</td>
+                            <td class="param-type">int</td>
+                            <td>Max suggestions (1-50) <span class="param-optional">optional</span></td>
+                            <td>10</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="example-request">
+                    <strong>Example Request:</strong>
+                    <pre><code>GET /api.php?action=suggest&field=pose&q=stand&limit=5</code></pre>
+                </div>
+
+                <h4>Response</h4>
+                <pre><code>{
+    "success": true,
+    "data": [
+        {"value": "standing", "count": 234},
+        {"value": "standing_casual", "count": 87},
+        {"value": "standing_heroic", "count": 45}
+    ]
+}</code></pre>
+            </div>
+
+            <!-- 7. TAGS -->
+            <div class="endpoint">
+                <div class="endpoint-title">
+                    <span class="method get">GET</span>
+                    <span class="endpoint-path">/api.php?action=tags</span>
+                </div>
+                <p>Lấy danh sách popular tags cho pose, outfit, hoặc background.</p>
+                
+                <h4>Parameters</h4>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                            <th>Default</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="param-name">field</td>
+                            <td class="param-type">string</td>
+                            <td>Field name: pose, outfit, background <span class="param-required">required</span></td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td class="param-name">limit</td>
+                            <td class="param-type">int</td>
+                            <td>Max tags (1-100) <span class="param-optional">optional</span></td>
+                            <td>20</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="example-request">
+                    <strong>Example Request:</strong>
+                    <pre><code>GET /api.php?action=tags&field=outfit&limit=10</code></pre>
+                </div>
+
+                <h4>Response</h4>
+                <pre><code>{
+    "success": true,
+    "data": [
+        {"tag": "school_uniform", "count": 432},
+        {"tag": "casual", "count": 387},
+        {"tag": "fantasy", "count": 298}
+    ]
+}</code></pre>
+            </div>
+
+            <!-- 8. TRENDING -->
+            <div class="endpoint">
+                <div class="endpoint-title">
+                    <span class="method get">GET</span>
+                    <span class="endpoint-path">/api.php?action=trending</span>
+                </div>
+                <p>Lấy images mới nhất và trending (ordered by ID descending).</p>
+                
+                <h4>Parameters</h4>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                            <th>Default</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="param-name">limit</td>
+                            <td class="param-type">int</td>
+                            <td>Number of results (1-100) <span class="param-optional">optional</span></td>
+                            <td>20</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="example-request">
+                    <strong>Example Request:</strong>
+                    <pre><code>GET /api.php?action=trending&limit=15</code></pre>
+                </div>
+            </div>
+
+            <!-- 9. BATCH -->
+            <div class="endpoint">
+                <div class="endpoint-title">
+                    <span class="method get">GET</span>
+                    <span class="endpoint-path">/api.php?action=batch</span>
+                </div>
+                <p>Lấy nhiều images cùng lúc theo danh sách IDs (max 50 IDs).</p>
+                
+                <h4>Parameters</h4>
+                <table class="param-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="param-name">ids</td>
+                            <td class="param-type">string</td>
+                            <td>Comma-separated image IDs (max 50) <span class="param-required">required</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="example-request">
+                    <strong>Example Request:</strong>
+                    <pre><code>GET /api.php?action=batch&ids=img_001,img_002,img_003</code></pre>
+                </div>
+
+                <h4>Response</h4>
+                <pre><code>{
+    "success": true,
+    "data": [
+        {"id": "img_001", /* ... */},
+        {"id": "img_002", /* ... */},
+        {"id": "img_003", /* ... */}
+    ],
+    "count": 3
+}</code></pre>
+            </div>
+        </section>
+
+        <!-- PARAMETERS REFERENCE -->
+        <section id="parameters" class="section">
+            <h2>📋 Parameters Reference</h2>
+            <p>Tổng hợp tất cả query parameters được hỗ trợ bởi Images API.</p>
+
+            <h3>Filtering Parameters (9)</h3>
+            <table class="param-table">
+                <thead>
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Type</th>
+                        <th>Values</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="param-name">character_id</td>
+                        <td class="param-type">varchar</td>
+                        <td>Any character ID</td>
+                        <td>Filter images by character</td>
+                    </tr>
+                    <tr>
+                        <td class="param-name">gender</td>
+                        <td class="param-type">string</td>
+                        <td>male, female, other, etc.</td>
+                        <td>Filter by gender</td>
+                    </tr>
+                    <tr>
+                        <td class="param-name">style</td>
+                        <td class="param-type">string</td>
+                        <td>anime, realistic, fantasy, etc.</td>
+                        <td>Filter by art style</td>
+                    </tr>
+                    <tr>
+                        <td class="param-name">width</td>
+                        <td class="param-type">int</td>
+                        <td>512, 1024, 2048, etc.</td>
+                        <td>Filter by exact width in pixels</td>
+                    </tr>
+                    <tr>
+                        <td class="param-name">height</td>
+                        <td class="param-type">int</td>
+                        <td>512, 1024, 2048, etc.</td>
+                        <td>Filter by exact height in pixels</td>
+                    </tr>
+                    <tr>
+                        <td class="param-name">pose</td>
+                        <td class="param-type">string</td>
+                        <td>standing, sitting, action, etc.</td>
+                        <td>Filter by character pose</td>
+                    </tr>
+                    <tr>
+                        <td class="param-name">outfit</td>
+                        <td class="param-type">string</td>
+                        <td>casual, school_uniform, fantasy, etc.</td>
+                        <td>Filter by character outfit</td>
+                    </tr>
+                    <tr>
+                        <td class="param-name">background</td>
+                        <td class="param-type">string</td>
+                        <td>classroom, outdoor, abstract, etc.</td>
+                        <td>Filter by background type</td>
+                    </tr>
+                    <tr>
+                        <td class="param-name">allowed_for_community</td>
+                        <td class="param-type">boolean</td>
+                        <td>0, 1</td>
+                        <td>Filter by community allowance status</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Search & Sorting Parameters (4)</h3>
+            <table class="param-table">
+                <thead>
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Type</th>
+                        <th>Values</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="param-name">search</td>
+                        <td class="param-type">string</td>
+                        <td>Any text</td>
+                        <td>Full-text search on character, pose, outfit, background</td>
+                    </tr>
+                    <tr>
+                        <td class="param-name">sort_by</td>
+                        <td class="param-type">string</td>
+                        <td>id, character_id, width, height</td>
+                        <td>Field to sort by</td>
+                    </tr>
+                    <tr>
+                        <td class="param-name">sort_order</td>
+                        <td class="param-type">string</td>
+                        <td>ASC, DESC</td>
+                        <td>Sort direction</td>
+                    </tr>
+                    <tr>
+                        <td class="param-name">page</td>
+                        <td class="param-type">int</td>
+                        <td>1-∞</td>
+                        <td>Page number (1-based)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Pagination & Limits</h3>
+            <table class="param-table">
+                <thead>
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Type</th>
+                        <th>Range</th>
+                        <th>Default</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="param-name">limit</td>
+                        <td class="param-type">int</td>
+                        <td>1-100</td>
+                        <td>20</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- EXAMPLES -->
+        <section id="examples" class="section">
+            <h2>💡 Usage Examples</h2>
+
+            <h3>Example 1: Get Female Anime Images</h3>
+            <pre><code>GET /api.php?action=list&gender=female&style=anime&limit=20</code></pre>
+
+            <h3>Example 2: Search for School Uniform</h3>
+            <pre><code>GET /api.php?action=list&search=school%20uniform&sort_by=id&sort_order=DESC</code></pre>
+
+            <h3>Example 3: Get High Resolution Images</h3>
+            <pre><code>GET /api.php?action=list&width=2048&height=2048&limit=10</code></pre>
+
+            <h3>Example 4: Find Standing Poses</h3>
+            <pre><code>GET /api.php?action=list&pose=standing&allowed_for_community=1</code></pre>
+
+            <h3>Example 5: Get Similar Images</h3>
+            <pre><code>GET /api.php?action=similar&id=img_123&limit=15</code></pre>
+
+            <h3>Example 6: Autocomplete Poses</h3>
+            <pre><code>GET /api.php?action=suggest&field=pose&q=sit&limit=10</code></pre>
+
+            <h3>Example 7: Get Stats</h3>
+            <pre><code>GET /api.php?action=stats</code></pre>
+
+            <h3>Example 8: Batch Fetch</h3>
+            <pre><code>GET /api.php?action=batch&ids=img_001,img_002,img_003,img_004,img_005</code></pre>
+
+            <h3>Example 9: Complex Filter</h3>
+            <pre><code>GET /api.php?action=list&character_id=char_sakura&gender=female&style=anime&pose=standing&outfit=school_uniform&background=classroom&allowed_for_community=1&limit=10</code></pre>
+
+            <div class="note">
+                <div class="note-title">💡 Pro Tip</div>
+                <p>
+                    Combine multiple filters để narrow down results. API hỗ trợ filtering theo nhiều tiêu chí cùng lúc
+                    và sử dụng prepared statements để ensure performance và security.
+                </p>
+            </div>
+        </section>
+
+        <!-- FIELDS REFERENCE -->
+        <section id="fields" class="section">
+            <h2>📊 Field Reference</h2>
+            <p>Tất cả 21 fields được trả về từ API cho mỗi image object.</p>
+
+            <table class="field-table">
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">Field Name</th>
+                        <th style="width: 15%;">Type</th>
+                        <th style="width: 15%;">Max Length</th>
+                        <th style="width: 50%;">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="param-name">id</td>
+                        <td>varchar</td>
+                        <td>255</td>
+                        <td>Unique image ID (primary key)</td>
+                    </tr>
+                    <tr>
+                        <td class="param-name">character_id</td>
+                        <td>varchar</td>
+                        <td>255</td>
+                        <td>Associated character ID (foreign key)</td>
+                    </tr>
+                    <tr>
+                        <td class="param-name">character_name</td>
+                        <td>varchar</td>
+                        <td>255</td>
+                        <td>Character display name</td>
+                    </tr>
+                    <tr>
+                        <td class="param-name">gender</td>
+                        <td>varchar</td>
+                        <td>50</td>
+                        <td>Character gender (male/female/other)</td>
+                    </tr>
+                    <tr>
+                        <td class="param-name">style</td>
+                        <td>varchar</td>
+                        <td>100</td>
+                        <td>Art style (anime/realistic/fantasy)</td>
+                    </tr>
+                    <tr>
+                        <td class="param-name">width</td>
+                        <td>int</td>
+                        <td>-</td>
+                        <td>Image width in pixels</td>
+                    </tr>
+                    <tr>
+                        <td class="param-name">height</td>
+                        <td>int</td>
+                        <td>-</td>
+                        <td>Image height in pixels</td>
+                    </tr>
+                    <tr>
+                        <td class="param-name">pose</td>
+                        <td>text</td>
+                        <td>-</td>
+                        <td>Character pose description</td>
+                    </tr>
+                    <tr>
+                        <td class="param-name">outfit</td>
+                        <td>text</td>
+                        <td>-</td>
+                        <td>Character outfit description</td>
+                    </tr>
+                    <tr>
+                        <td class="param-name">background</td>
+                        <td>text</td>
+                        <td>-</td>
+                        <td>Background description</td>
+                    </tr>
+                    <tr>
+                        <td class="param-name">hair_color</td>
+                        <td>varchar</td>
+                        <td>100</td>
+                        <td>Hair color</td>
+                    </tr>
+                    <tr>
+                        <td class="param-name">eye_color</td>
+                        <td>varchar</td>
+                        <td>100</td>
+                        <td>Eye color</td>
+                    </tr>
+                    <tr>
+                        <td class="param-name">facial_expression</td>
+                        <td>varchar</td>
+                        <td>100</td>
+                        <td>Facial expression</td>
+                    </tr>
+                    <tr>
+                        <td class="param-name">lighting</td>
+                        <td>varchar</td>
+                        <td>100</td>
+                        <td>Lighting style</td>
+                    </tr>
+                    <tr>
+                        <td class="param-name">camera_angle</td>
+                        <td>varchar</td>
+                        <td>100</td>
+                        <td>Camera angle/perspective</td>
+                    </tr>
+                    <tr>
+                        <td class="param-name">quality</td>
+                        <td>varchar</td>
+                        <td>50</td>
+                        <td>Image quality level</td>
+                    </tr>
+                    <tr>
+                        <td class="param-name">url</td>
+                        <td>text</td>
+                        <td>-</td>
+                        <td>Image URL</td>
+                    </tr>
+                    <tr>
+                        <td class="param-name">thumbnail_url</td>
+                        <td>text</td>
+                        <td>-</td>
+                        <td>Thumbnail URL</td>
+                    </tr>
+                    <tr>
+                        <td class="param-name">allowed_for_community</td>
+                        <td>tinyint</td>
+                        <td>-</td>
+                        <td>Community allowance flag (0/1)</td>
+                    </tr>
+                    <tr>
+                        <td class="param-name">error_message</td>
+                        <td>text</td>
+                        <td>-</td>
+                        <td>Error message if any</td>
+                    </tr>
+                    <tr>
+                        <td class="param-name">created_at</td>
+                        <td>varchar</td>
+                        <td>50</td>
+                        <td>Creation timestamp</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="note">
+                <div class="note-title">📝 Note on Data Types</div>
+                <p>
+                    API automatically casts numeric fields (<code>width</code>, <code>height</code>, 
+                    <code>allowed_for_community</code>) to appropriate types. Empty/null values are removed 
+                    from response để giữ payload nhỏ gọn.
+                </p>
+            </div>
+        </section>
+
+        <!-- PERFORMANCE & SECURITY -->
+        <section id="performance" class="section">
+            <h2>⚡ Performance & Security</h2>
+
+            <h3>Database Optimization</h3>
+            <ul>
+                <li><strong>Persistent Connections:</strong> PDO::ATTR_PERSISTENT giảm overhead của connection setup</li>
+                <li><strong>Prepared Statements:</strong> Tất cả queries sử dụng prepared statements với emulated prepares disabled</li>
+                <li><strong>Separate COUNT Queries:</strong> Tránh SQL_CALC_FOUND_ROWS để prevent temporary table creation</li>
+                <li><strong>Indexed Sorting:</strong> Sort by <code>id</code> (VARCHAR indexed) thay vì <code>created_at</code> (TEXT) để avoid filesort</li>
+                <li><strong>LIMIT/OFFSET:</strong> Pagination được implement hiệu quả với LIMIT và OFFSET</li>
+            </ul>
+
+            <h3>Security Measures</h3>
+            <ul>
+                <li><strong>SQL Injection Protection:</strong> PDO prepared statements với <code>ATTR_EMULATE_PREPARES = false</code></li>
+                <li><strong>Input Validation:</strong> Tất cả inputs được validate (numeric ranges, string patterns, enum values)</li>
+                <li><strong>Input Sanitization:</strong> Trim whitespace, sanitize search queries</li>
+                <li><strong>CORS Headers:</strong> Access-Control-Allow-Origin configured</li>
+                <li><strong>Error Handling:</strong> Proper exception handling, không expose sensitive info</li>
+            </ul>
+
+            <h3>Response Optimization</h3>
+            <ul>
+                <li><strong>Type Casting:</strong> Numeric fields auto-cast to int (width, height, allowed_for_community)</li>
+                <li><strong>Null Removal:</strong> Empty và null values removed from response</li>
+                <li><strong>Efficient Pagination:</strong> Metadata includes total, total_pages, current page</li>
+                <li><strong>Batch Limits:</strong> Maximum 50 IDs per batch request để prevent abuse</li>
+            </ul>
+
+            <h3>Caching Recommendations</h3>
+            <div class="note">
+                <div class="note-title">💡 Caching Strategy</div>
+                <ul>
+                    <li><strong>Stats Endpoint:</strong> Cache for 5-15 minutes (rarely changes)</li>
+                    <li><strong>Tags/Suggest:</strong> Cache for 1-5 minutes (relatively stable)</li>
+                    <li><strong>List Queries:</strong> Cache for 1-3 minutes based on filters</li>
+                    <li><strong>Individual Gets:</strong> Cache for 30-60 minutes (stable data)</li>
+                    <li><strong>Similar/Random:</strong> Short cache (30s-1m) hoặc no cache for variety</li>
+                </ul>
+            </div>
+
+            <h3>Rate Limiting</h3>
+            <p>
+                Consider implementing rate limiting ở application layer hoặc reverse proxy level:
+            </p>
+            <ul>
+                <li><strong>List Endpoint:</strong> 100 requests/minute per IP</li>
+                <li><strong>Stats Endpoint:</strong> 20 requests/minute per IP</li>
+                <li><strong>Other Endpoints:</strong> 200 requests/minute per IP</li>
+            </ul>
+        </section>
+
+        <!-- ERROR CODES -->
+        <section id="errors" class="section">
+            <h2>❌ Error Handling</h2>
+            
+            <h3>Error Response Format</h3>
+            <pre><code>{
+    "success": false,
+    "error": "Error message description"
+}</code></pre>
+
+            <h3>Common Errors</h3>
+            <table class="param-table">
+                <thead>
+                    <tr>
+                        <th>Error Message</th>
+                        <th>Cause</th>
+                        <th>Solution</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Invalid action</td>
+                        <td>Unknown endpoint action</td>
+                        <td>Check action parameter (list, get, stats, etc.)</td>
+                    </tr>
+                    <tr>
+                        <td>Image not found</td>
+                        <td>ID doesn't exist</td>
+                        <td>Verify image ID exists in database</td>
+                    </tr>
+                    <tr>
+                        <td>ID is required</td>
+                        <td>Missing ID for get/similar</td>
+                        <td>Provide id parameter</td>
+                    </tr>
+                    <tr>
+                        <td>IDs parameter is required</td>
+                        <td>Missing IDs for batch</td>
+                        <td>Provide comma-separated ids</td>
+                    </tr>
+                    <tr>
+                        <td>Invalid field parameter</td>
+                        <td>Wrong field for suggest/tags</td>
+                        <td>Use pose, outfit, or background</td>
+                    </tr>
+                    <tr>
+                        <td>Maximum 50 IDs allowed</td>
+                        <td>Too many IDs in batch</td>
+                        <td>Limit to 50 IDs per request</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+    </div>
+
+    <a href="#" class="back-to-top">↑ Back to Top</a>
+
+    <script>
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Show/hide back to top button
+        const backToTop = document.querySelector('.back-to-top');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTop.style.opacity = '1';
+                backToTop.style.pointerEvents = 'auto';
+            } else {
+                backToTop.style.opacity = '0';
+                backToTop.style.pointerEvents = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

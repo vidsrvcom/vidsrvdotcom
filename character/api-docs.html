@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Characters API Documentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        .animated-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .gradient-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.5;
+            animation: float 20s infinite ease-in-out;
+        }
+        .orb-1 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(30, 144, 255, 0.4) 0%, transparent 70%);
+            top: -10%;
+            left: -10%;
+            animation-delay: 0s;
+        }
+        .orb-2 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(251, 188, 5, 0.3) 0%, transparent 70%);
+            bottom: -10%;
+            right: -10%;
+            animation-delay: 7s;
+        }
+        .orb-3 {
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(52, 168, 83, 0.3) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: 14s;
+        }
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+        
+        .container {
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+            z-index: 1;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-align: center;
+            background: linear-gradient(135deg, #1E90FF 0%, #4A9EFF 50%, #FBBC05 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.02em;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #909090;
+            margin-bottom: 3rem;
+            font-size: 1.1rem;
+        }
+        
+        .card {
+            background: rgba(20, 20, 20, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+        
+        h2 {
+            color: #4A9EFF;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        h3 {
+            color: #ffffff;
+            margin: 1.5rem 0 1rem 0;
+            font-size: 1.3rem;
+        }
+        
+        .method {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-right: 0.5rem;
+        }
+        
+        .method.get {
+            background: rgba(52, 168, 83, 0.2);
+            color: #34A853;
+            border: 1px solid rgba(52, 168, 83, 0.4);
+        }
+        
+        .endpoint-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .endpoint-title {
+            font-size: 1.2rem;
+            color: #ffffff;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .url {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            color: #4A9EFF;
+            margin: 1rem 0;
+            border: 1px solid rgba(74, 158, 255, 0.3);
+            word-break: break-all;
+        }
+        
+        .description {
+            color: #b0b0b0;
+            line-height: 1.6;
+            margin: 1rem 0;
+        }
+        
+        .params-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        
+        .params-table th {
+            background: rgba(74, 158, 255, 0.15);
+            color: #ffffff;
+            padding: 0.8rem;
+            text-align: left;
+            border: 1px solid rgba(74, 158, 255, 0.3);
+            font-weight: 600;
+        }
+        
+        .params-table td {
+            padding: 0.8rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #b0b0b0;
+        }
+        
+        .params-table tr:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+        
+        .param-name {
+            color: #4A9EFF;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+        }
+        
+        .param-type {
+            color: #FBBC05;
+            font-size: 0.85rem;
+        }
+        
+        code {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #34A853;
+            font-size: 0.9rem;
+        }
+        
+        pre {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 1.2rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+            color: #e0e0e0;
+            display: block;
+        }
+        
+        .example-title {
+            color: #909090;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin: 1rem 0 0.5rem 0;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .note {
+            background: rgba(251, 188, 5, 0.1);
+            border-left: 3px solid #FBBC05;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+        
+        .note-title {
+            color: #FBBC05;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .feature-list li {
+            padding: 0.5rem 0;
+            color: #b0b0b0;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        
+        .feature-list li:before {
+            content: "✓";
+            color: #34A853;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+            .card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-background">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
+    </div>
+
+    <div class="container">
+        <h1>📚 Characters API</h1>
+        <p class="subtitle">Documentation - Read-Only API</p>
+
+        <div class="card">
+            <h2>🌟 Tổng Quan</h2>
+            <p class="description">
+                Characters API cung cấp các endpoint để xem thông tin nhân vật. 
+                API chỉ hỗ trợ phương thức <strong>GET</strong> (read-only).
+            </p>
+            
+            <h3>✨ Tính Năng</h3>
+            <ul class="feature-list">
+                <li>Xem danh sách characters với phân trang</li>
+                <li>Tìm kiếm theo tên, mô tả</li>
+                <li>Lọc theo giới tính, visibility, tags</li>
+                <li>Sắp xếp theo nhiều tiêu chí</li>
+                <li>Xem chi tiết character</li>
+                <li>JSON response chuẩn</li>
+                <li>CORS enabled</li>
+            </ul>
+
+            <div class="note">
+                <div class="note-title">📝 Lưu ý</div>
+                <div class="description">
+                    Base URL: <code>https://vidsrv.com/character/api.php</code><br>
+                    Tất cả requests đều sử dụng method GET với query parameters
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>🔍 API Endpoints (9 Total)</h2>
+            <p class="description">API cung cấp 9 endpoints đa dạng cho mọi nhu cầu về characters.</p>
+        </div>
+
+        <!-- List Characters -->
+        <div class="card">
+            <div class="endpoint-card">
+                <div class="endpoint-title">
+                    <span class="method get">GET</span>
+                    Danh Sách Characters
+                </div>
+                
+                <div class="url">GET https://vidsrv.com/character/api.php?action=list</div>
+                
+                <p class="description">
+                    Lấy danh sách tất cả characters với khả năng lọc, tìm kiếm, sắp xếp và phân trang.
+                </p>
+
+                <h3>Query Parameters</h3>
+                <table class="params-table">
+                    <thead>
+                        <tr>
+                            <th>Tên</th>
+                            <th>Type</th>
+                            <th>Mô tả</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="param-name">action</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Giá trị: <code>list</code> (mặc định)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">page</span></td>
+                            <td><span class="param-type">integer</span></td>
+                            <td>Số trang (mặc định: 1)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">limit</span></td>
+                            <td><span class="param-type">integer</span></td>
+                            <td>Số lượng/trang (1-100, mặc định: 20)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">search</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Tìm kiếm theo tên, mô tả</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">gender</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Lọc theo giới tính (male, female, other)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">style</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Lọc theo phong cách (anime, realistic, cartoon...)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">visibility</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Lọc theo visibility (public, private, unlisted)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">tag</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Lọc theo tag cụ thể</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">approved</span></td>
+                            <td><span class="param-type">boolean</span></td>
+                            <td>Lọc theo trạng thái phê duyệt (true/false)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">hidden</span></td>
+                            <td><span class="param-type">boolean</span></td>
+                            <td>Lọc theo trạng thái ẩn (true/false)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">sort_by</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Sắp xếp theo (created_at, name, message_count, like_count, age)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">sort_order</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Thứ tự sắp xếp (ASC, DESC)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="example-title">📌 Ví dụ Requests:</div>
+                <pre><code>// Lấy 10 characters đầu tiên
+GET https://vidsrv.com/character/api.php?action=list&limit=10
+
+// Tìm kiếm "anime"
+GET https://vidsrv.com/character/api.php?action=list&search=anime
+
+// Lọc theo giới tính female, sắp xếp theo lượt thích
+GET https://vidsrv.com/character/api.php?action=list&gender=female&sort_by=like_count&sort_order=DESC
+
+// Lọc theo style anime
+GET https://vidsrv.com/character/api.php?action=list&style=anime
+
+// Lọc theo tag "friendly", trang 2
+GET https://vidsrv.com/character/api.php?action=list&tag=friendly&page=2
+
+// Characters đã được phê duyệt, visibility=public
+GET https://vidsrv.com/character/api.php?action=list&approved=true&visibility=public</code></pre>
+
+                <div class="example-title">✅ Response (200 OK):</div>
+                <pre><code>{
+  "success": true,
+  "data": [
+    {
+      "id": "a1b2c3d4e5f6...",
+      "created_at": "2025-12-02 10:30:00",
+      "display_id": "sakura-a1b2c3",
+      "name": "Sakura",
+      "voice": "female-01",
+      "age": 22,
+      "description": "A cheerful character",
+      "personality": "Friendly, optimistic",
+      "gender": "female",
+      "visibility": "public",
+      "tags": ["anime", "friendly"],
+      "message_count": 1523,
+      "like_count": 342,
+      "hidden": false
+    }
+  ],
+  "pagination": {
+    "current_page": 1,
+    "per_page": 20,
+    "total": 150,
+    "total_pages": 8,
+    "has_more": true
+  }
+}</code></pre>
+            </div>
+        </div>
+
+        <!-- Get Character -->
+        <div class="card">
+            <div class="endpoint-card">
+                <div class="endpoint-title">
+                    <span class="method get">GET</span>
+                    Chi Tiết Character
+                </div>
+                
+                <div class="url">GET https://vidsrv.com/character/api.php?action=get&id={id}</div>
+                
+                <p class="description">
+                    Lấy thông tin chi tiết của một character theo ID hoặc display_id.
+                </p>
+
+                <h3>Query Parameters</h3>
+                <table class="params-table">
+                    <thead>
+                        <tr>
+                            <th>Tên</th>
+                            <th>Type</th>
+                            <th>Mô tả</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="param-name">action</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Giá trị: <code>get</code> (bắt buộc)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">id</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Character ID hoặc display_id (bắt buộc)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="example-title">📌 Ví dụ Requests:</div>
+                <pre><code>// Lấy theo ID
+GET https://vidsrv.com/character/api.php?action=get&id=a1b2c3d4e5f6g7h8
+
+// Lấy theo display_id
+GET https://vidsrv.com/character/api.php?action=get&id=sakura-a1b2c3</code></pre>
+
+                <div class="example-title">✅ Response (200 OK):</div>
+                <pre><code>{
+  "success": true,
+  "data": {
+    "id": "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6",
+    "created_at": "2025-12-02 10:30:00",
+    "display_id": "sakura-a1b2c3",
+    "name": "Sakura",
+    "voice": "female-01",
+    "age": 22,
+    "description": "A cheerful and energetic character",
+    "personality": "Friendly, optimistic, loves anime",
+    "character_image_prompt": "anime style girl with pink hair",
+    "hidden": false,
+    "visibility": "public",
+    "tags": ["anime", "friendly", "energetic"],
+    "gender": "female",
+    "style": "anime",
+    "model": "gpt-4",
+    "display_image_urls": ["https://example.com/image1.jpg"],
+    "scenario": "A student living in Tokyo",
+    "short_description": "Cheerful anime girl",
+    "message_count": 1523,
+    "like_count": 342,
+    "estimated_message_count": 1500,
+    "approved_at": "2025-12-02 11:00:00"
+  }
+}</code></pre>
+
+                <div class="example-title">❌ Error Response (404 Not Found):</div>
+                <pre><code>{
+  "success": false,
+  "error": "Character not found"
+}</code></pre>
+            </div>
+        </div>
+
+        <!-- Statistics -->
+        <div class="card">
+            <div class="endpoint-card">
+                <div class="endpoint-title">
+                    <span class="method get">GET</span>
+                    Thống Kê & Analytics
+                </div>
+                
+                <div class="url">GET https://vidsrv.com/character/api.php?action=stats</div>
+                
+                <p class="description">
+                    Lấy thống kê tổng quan về characters: tổng số, phân bổ theo gender/style/visibility, top characters, characters mới nhất.
+                </p>
+
+                <div class="example-title">✅ Response (200 OK):</div>
+                <pre><code>{
+  "success": true,
+  "data": {
+    "total_characters": 1523,
+    "by_gender": [
+      {"gender": "female", "count": 823},
+      {"gender": "male", "count": 650}
+    ],
+    "by_style": [
+      {"style": "anime", "count": 890},
+      {"style": "realistic", "count": 433}
+    ],
+    "by_visibility": [
+      {"visibility": "public", "count": 1200},
+      {"visibility": "private", "count": 323}
+    ],
+    "top_liked": [...],
+    "top_messages": [...],
+    "recent": [...],
+    "approval_stats": {
+      "approved": 1200,
+      "not_approved": 323
+    }
+  }
+}</code></pre>
+            </div>
+        </div>
+
+        <!-- Random Character -->
+        <div class="card">
+            <div class="endpoint-card">
+                <div class="endpoint-title">
+                    <span class="method get">GET</span>
+                    Character Ngẫu Nhiên
+                </div>
+                
+                <div class="url">GET https://vidsrv.com/character/api.php?action=random</div>
+                
+                <p class="description">
+                    Lấy một character ngẫu nhiên. Có thể lọc theo gender, style, visibility, approved.
+                </p>
+
+                <h3>Query Parameters</h3>
+                <table class="params-table">
+                    <thead>
+                        <tr>
+                            <th>Tên</th>
+                            <th>Type</th>
+                            <th>Mô tả</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="param-name">action</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Giá trị: <code>random</code></td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">gender</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Lọc theo giới tính (optional)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">style</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Lọc theo phong cách (optional)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">visibility</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Lọc theo visibility (optional)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">approved</span></td>
+                            <td><span class="param-type">boolean</span></td>
+                            <td>Chỉ lấy đã approved (optional)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="example-title">📌 Ví dụ:</div>
+                <pre><code>// Random bất kỳ
+GET https://vidsrv.com/character/api.php?action=random
+
+// Random female anime
+GET https://vidsrv.com/character/api.php?action=random&gender=female&style=anime</code></pre>
+            </div>
+        </div>
+
+        <!-- Similar Characters -->
+        <div class="card">
+            <div class="endpoint-card">
+                <div class="endpoint-title">
+                    <span class="method get">GET</span>
+                    Characters Tương Tự
+                </div>
+                
+                <div class="url">GET https://vidsrv.com/character/api.php?action=similar&id={id}</div>
+                
+                <p class="description">
+                    Tìm các characters tương tự dựa trên style, gender và tags. Có similarity score.
+                </p>
+
+                <h3>Query Parameters</h3>
+                <table class="params-table">
+                    <thead>
+                        <tr>
+                            <th>Tên</th>
+                            <th>Type</th>
+                            <th>Mô tả</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="param-name">action</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Giá trị: <code>similar</code></td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">id</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Character ID (bắt buộc)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="example-title">📌 Ví dụ:</div>
+                <pre><code>GET https://vidsrv.com/character/api.php?action=similar&id=sakura-a1b2c3</code></pre>
+
+                <div class="example-title">✅ Response:</div>
+                <pre><code>{
+  "success": true,
+  "data": [...],
+  "reference_character": {
+    "id": "...",
+    "name": "Sakura"
+  }
+}</code></pre>
+            </div>
+        </div>
+
+        <!-- Search Suggestions -->
+        <div class="card">
+            <div class="endpoint-card">
+                <div class="endpoint-title">
+                    <span class="method get">GET</span>
+                    Gợi Ý Tìm Kiếm (Autocomplete)
+                </div>
+                
+                <div class="url">GET https://vidsrv.com/character/api.php?action=suggest&q={query}</div>
+                
+                <p class="description">
+                    Autocomplete suggestions cho tìm kiếm characters. Trả về danh sách gợi ý dựa trên prefix.
+                </p>
+
+                <h3>Query Parameters</h3>
+                <table class="params-table">
+                    <thead>
+                        <tr>
+                            <th>Tên</th>
+                            <th>Type</th>
+                            <th>Mô tả</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="param-name">action</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Giá trị: <code>suggest</code></td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">q</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Query string (bắt buộc)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">limit</span></td>
+                            <td><span class="param-type">integer</span></td>
+                            <td>Số kết quả (1-20, mặc định: 10)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="example-title">📌 Ví dụ:</div>
+                <pre><code>GET https://vidsrv.com/character/api.php?action=suggest&q=sak&limit=5</code></pre>
+
+                <div class="example-title">✅ Response:</div>
+                <pre><code>{
+  "success": true,
+  "data": [
+    {
+      "id": "...",
+      "display_id": "sakura-a1b2c3",
+      "name": "Sakura",
+      "short_description": "...",
+      "like_count": 342
+    }
+  ],
+  "query": "sak",
+  "count": 1
+}</code></pre>
+            </div>
+        </div>
+
+        <!-- Popular Tags -->
+        <div class="card">
+            <div class="endpoint-card">
+                <div class="endpoint-title">
+                    <span class="method get">GET</span>
+                    Tags Phổ Biến
+                </div>
+                
+                <div class="url">GET https://vidsrv.com/character/api.php?action=tags</div>
+                
+                <p class="description">
+                    Lấy danh sách tags phổ biến nhất với số lượng characters sử dụng mỗi tag.
+                </p>
+
+                <h3>Query Parameters</h3>
+                <table class="params-table">
+                    <thead>
+                        <tr>
+                            <th>Tên</th>
+                            <th>Type</th>
+                            <th>Mô tả</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="param-name">action</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Giá trị: <code>tags</code></td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">limit</span></td>
+                            <td><span class="param-type">integer</span></td>
+                            <td>Số tags (1-100, mặc định: 50)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="example-title">📌 Ví dụ:</div>
+                <pre><code>GET https://vidsrv.com/character/api.php?action=tags&limit=20</code></pre>
+
+                <div class="example-title">✅ Response:</div>
+                <pre><code>{
+  "success": true,
+  "data": [
+    {"tag": "anime", "count": 890},
+    {"tag": "friendly", "count": 567},
+    {"tag": "cute", "count": 445}
+  ],
+  "total_unique_tags": 20
+}</code></pre>
+            </div>
+        </div>
+
+        <!-- Trending Characters -->
+        <div class="card">
+            <div class="endpoint-card">
+                <div class="endpoint-title">
+                    <span class="method get">GET</span>
+                    Characters Đang Hot (Trending)
+                </div>
+                
+                <div class="url">GET https://vidsrv.com/character/api.php?action=trending</div>
+                
+                <p class="description">
+                    Lấy danh sách characters đang trending (hot) dựa trên engagement gần đây. 
+                    Trending score = (likes × 2 + messages) / days_since_created
+                </p>
+
+                <h3>Query Parameters</h3>
+                <table class="params-table">
+                    <thead>
+                        <tr>
+                            <th>Tên</th>
+                            <th>Type</th>
+                            <th>Mô tả</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="param-name">action</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Giá trị: <code>trending</code></td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">limit</span></td>
+                            <td><span class="param-type">integer</span></td>
+                            <td>Số kết quả (1-50, mặc định: 20)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">days</span></td>
+                            <td><span class="param-type">integer</span></td>
+                            <td>Khoảng thời gian (1-90, mặc định: 7)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="example-title">📌 Ví dụ:</div>
+                <pre><code>// Trending 7 ngày qua
+GET https://vidsrv.com/character/api.php?action=trending
+
+// Trending 30 ngày, top 10
+GET https://vidsrv.com/character/api.php?action=trending&days=30&limit=10</code></pre>
+
+                <div class="example-title">✅ Response:</div>
+                <pre><code>{
+  "success": true,
+  "data": [
+    {
+      "id": "...",
+      "name": "Sakura",
+      "like_count": 342,
+      "message_count": 1523,
+      "trending_score": 45.5,
+      "created_at": "2025-11-25 10:00:00"
+    }
+  ],
+  "period_days": 7,
+  "count": 20
+}</code></pre>
+            </div>
+        </div>
+
+        <!-- Batch Get -->
+        <div class="card">
+            <div class="endpoint-card">
+                <div class="endpoint-title">
+                    <span class="method get">GET</span>
+                    Lấy Nhiều Characters (Batch)
+                </div>
+                
+                <div class="url">GET https://vidsrv.com/character/api.php?action=batch&ids={id1,id2,id3}</div>
+                
+                <p class="description">
+                    Lấy nhiều characters cùng lúc bằng cách truyền danh sách IDs (comma-separated). Tối đa 50 IDs.
+                </p>
+
+                <h3>Query Parameters</h3>
+                <table class="params-table">
+                    <thead>
+                        <tr>
+                            <th>Tên</th>
+                            <th>Type</th>
+                            <th>Mô tả</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="param-name">action</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Giá trị: <code>batch</code></td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">ids</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Danh sách IDs cách nhau bởi dấu phẩy (bắt buộc, max 50)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="example-title">📌 Ví dụ:</div>
+                <pre><code>GET https://vidsrv.com/character/api.php?action=batch&ids=id1,id2,id3</code></pre>
+
+                <div class="example-title">✅ Response:</div>
+                <pre><code>{
+  "success": true,
+  "data": [...],
+  "requested": 3,
+  "found": 3
+}</code></pre>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>⚠️ Error Responses</h2>
+            
+            <h3>400 Bad Request</h3>
+            <pre><code>{
+  "success": false,
+  "error": "Character ID is required"
+}</code></pre>
+
+            <h3>404 Not Found</h3>
+            <pre><code>{
+  "success": false,
+  "error": "Character not found"
+}</code></pre>
+
+            <h3>500 Internal Server Error</h3>
+            <pre><code>{
+  "success": false,
+  "error": "Database error",
+  "message": "Connection timeout"
+}</code></pre>
+        </div>
+
+        <div class="card">
+            <h2>📊 Data Types</h2>
+            
+            <h3>Character Object</h3>
+            <table class="params-table">
+                <thead>
+                    <tr>
+                        <th>Field</th>
+                        <th>Type</th>
+                        <th>Mô tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="param-name">id</span></td>
+                        <td><span class="param-type">string</span></td>
+                        <td>UUID duy nhất</td>
+                    </tr>
+                    <tr>
+                        <td><span class="param-name">created_at</span></td>
+                        <td><span class="param-type">string</span></td>
+                        <td>Timestamp tạo</td>
+                    </tr>
+                    <tr>
+                        <td><span class="param-name">display_id</span></td>
+                        <td><span class="param-type">string</span></td>
+                        <td>ID hiển thị thân thiện</td>
+                    </tr>
+                    <tr>
+                        <td><span class="param-name">name</span></td>
+                        <td><span class="param-type">string</span></td>
+                        <td>Tên nhân vật</td>
+                    </tr>
+                    <tr>
+                        <td><span class="param-name">voice</span></td>
+                        <td><span class="param-type">string|null</span></td>
+                        <td>ID giọng nói</td>
+                    </tr>
+                    <tr>
+                        <td><span class="param-name">age</span></td>
+                        <td><span class="param-type">integer|null</span></td>
+                        <td>Tuổi</td>
+                    </tr>
+                    <tr>
+                        <td><span class="param-name">gender</span></td>
+                        <td><span class="param-type">string|null</span></td>
+                        <td>Giới tính</td>
+                    </tr>
+                    <tr>
+                        <td><span class="param-name">description</span></td>
+                        <td><span class="param-type">text|null</span></td>
+                        <td>Mô tả chi tiết</td>
+                    </tr>
+                    <tr>
+                        <td><span class="param-name">personality</span></td>
+                        <td><span class="param-type">text|null</span></td>
+                        <td>Tính cách</td>
+                    </tr>
+                    <tr>
+                        <td><span class="param-name">tags</span></td>
+                        <td><span class="param-type">array|null</span></td>
+                        <td>Danh sách tags</td>
+                    </tr>
+                    <tr>
+                        <td><span class="param-name">visibility</span></td>
+                        <td><span class="param-type">string|null</span></td>
+                        <td>Chế độ hiển thị (public/private/unlisted)</td>
+                    </tr>
+                    <tr>
+                        <td><span class="param-name">hidden</span></td>
+                        <td><span class="param-type">boolean</span></td>
+                        <td>Ẩn/hiện</td>
+                    </tr>
+                    <tr>
+                        <td><span class="param-name">message_count</span></td>
+                        <td><span class="param-type">integer|null</span></td>
+                        <td>Số tin nhắn</td>
+                    </tr>
+                    <tr>
+                        <td><span class="param-name">like_count</span></td>
+                        <td><span class="param-type">integer|null</span></td>
+                        <td>Số lượt thích</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card">
+            <h2>🔗 Links</h2>
+            <p class="description">
+                <a href="index.html" style="color: #4A9EFF; text-decoration: none;">→ Trang chủ Features</a><br>
+                <a href="README.md" style="color: #4A9EFF; text-decoration: none;">→ README</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

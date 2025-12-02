@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Images API - Features</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        .animated-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .gradient-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.5;
+            animation: float 20s infinite ease-in-out;
+        }
+        .orb-1 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(52, 211, 153, 0.4) 0%, transparent 70%);
+            top: -10%;
+            left: -10%;
+        }
+        .orb-2 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.3) 0%, transparent 70%);
+            bottom: -10%;
+            right: -10%;
+            animation-delay: 7s;
+        }
+        .orb-3 {
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(34, 197, 94, 0.3) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: 14s;
+        }
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+        
+        .container {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            z-index: 1;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            text-align: center;
+            background: linear-gradient(135deg, #34D399 0%, #10B981 50%, #22C55E 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.02em;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #909090;
+            margin-bottom: 3rem;
+            font-size: 1.1rem;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .feature-card {
+            background: rgba(20, 20, 20, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(52, 211, 153, 0.3);
+            border-color: rgba(16, 185, 129, 0.4);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        
+        .feature-title {
+            color: #10B981;
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-description {
+            color: #b0b0b0;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .feature-list li {
+            padding: 0.4rem 0;
+            color: #e0e0e0;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.6rem;
+        }
+        
+        .feature-list li:before {
+            content: "▸";
+            color: #10B981;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .stats-section {
+            background: rgba(20, 20, 20, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #FB3F63 0%, #EC4899 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: #909090;
+            font-size: 0.95rem;
+        }
+        
+        .tech-section {
+            background: rgba(20, 20, 20, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+        
+        .tech-title {
+            color: #ffffff;
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+        
+        .tech-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .tech-badge {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10B981;
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        
+        .tech-name {
+            color: #e0e0e0;
+            font-size: 1rem;
+            flex: 1;
+        }
+        
+        .cta-section {
+            text-align: center;
+            margin-top: 3rem;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.9rem 2rem;
+            background: linear-gradient(135deg, #34D399 0%, #10B981 100%);
+            color: white;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 16px rgba(52, 211, 153, 0.3);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 211, 153, 0.5);
+        }
+        
+        .cta-button.secondary {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-background">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
+    </div>
+
+    <div class="container">
+        <h1>🖼️ Images API</h1>
+        <p class="subtitle">Quản lý & Khám phá AI-Generated Images</p>
+
+        <!-- Main Features Grid -->
+        <div class="features-grid">
+            <!-- Feature 1 -->
+            <div class="feature-card">
+                <span class="feature-icon">📋</span>
+                <h3 class="feature-title">Danh Sách & Phân Trang</h3>
+                <p class="feature-description">
+                    Xem danh sách images với phân trang và lọc mạnh mẽ
+                </p>
+                <ul class="feature-list">
+                    <li>Pagination linh hoạt (1-100 items/page)</li>
+                    <li>Filter theo character, gender, style</li>
+                    <li>Filter theo pose, outfit, background</li>
+                    <li>Full-text search</li>
+                </ul>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="feature-card">
+                <span class="feature-icon">🎯</span>
+                <h3 class="feature-title">Lọc Chi Tiết (13 Filters)</h3>
+                <p class="feature-description">
+                    Lọc images theo nhiều tiêu chí chi tiết
+                </p>
+                <ul class="feature-list">
+                    <li>Theo character_id, gender, style</li>
+                    <li>Theo resolution (width, height)</li>
+                    <li>Theo pose, outfit, background</li>
+                    <li>Filter by allowed_for_community</li>
+                    <li>Full-text search</li>
+                    <li>Sorting & pagination</li>
+                </ul>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="feature-card">
+                <span class="feature-icon">🔍</span>
+                <h3 class="feature-title">Tìm Kiếm Thông Minh</h3>
+                <p class="feature-description">
+                    Search full-text trên nhiều fields
+                </p>
+                <ul class="feature-list">
+                    <li>Search theo character name</li>
+                    <li>Search theo pose, outfit, background</li>
+                    <li>Search theo style, gender</li>
+                    <li>Pattern matching với LIKE</li>
+                </ul>
+            </div>
+
+            <!-- Feature 4 -->
+            <div class="feature-card">
+                <span class="feature-icon">↕️</span>
+                <h3 class="feature-title">Sắp Xếp Linh Hoạt</h3>
+                <p class="feature-description">
+                    Sort theo nhiều trường khác nhau
+                </p>
+                <ul class="feature-list">
+                    <li>Theo thời gian tạo (created_at)</li>
+                    <li>Theo tên character</li>
+                    <li>Theo type và action</li>
+                    <li>Theo duration</li>
+                    <li>Theo quality</li>
+                    <li>ASC hoặc DESC</li>
+                </ul>
+            </div>
+
+            <!-- Feature 5 -->
+            <div class="feature-card">
+                <span class="feature-icon">📊</span>
+                <h3 class="feature-title">Statistics & Analytics</h3>
+                <p class="feature-description">
+                    Thống kê toàn diện về images
+                </p>
+                <ul class="feature-list">
+                    <li>Total images và breakdown</li>
+                    <li>Phân bổ theo type, action, gender</li>
+                    <li>Top characters by image count</li>
+                    <li>Duration stats (avg, min, max)</li>
+                    <li>Error rate analytics</li>
+                    <li>Enhancement rate tracking</li>
+                </ul>
+            </div>
+
+            <!-- Feature 6 -->
+            <div class="feature-card">
+                <span class="feature-icon">🎲</span>
+                <h3 class="feature-title">Random Image</h3>
+                <p class="feature-description">
+                    Khám phá image ngẫu nhiên
+                </p>
+                <ul class="feature-list">
+                    <li>Random với filters</li>
+                    <li>Hỗ trợ all filters (type, action, etc)</li>
+                    <li>Option filter by allowed_for_community</li>
+                    <li>Perfect cho discovery UX</li>
+                </ul>
+            </div>
+
+            <!-- Feature 7 -->
+            <div class="feature-card">
+                <span class="feature-icon">🔗</span>
+                <h3 class="feature-title">Similar Images</h3>
+                <p class="feature-description">
+                    Tìm images tương tự dựa trên scoring
+                </p>
+                <ul class="feature-list">
+                    <li>Same character (5 points)</li>
+                    <li>Same type (3 points)</li>
+                    <li>Same action (2 points)</li>
+                    <li>Same style (2 points)</li>
+                    <li>Same gender (1 point)</li>
+                </ul>
+            </div>
+
+            <!-- Feature 8 -->
+            <div class="feature-card">
+                <span class="feature-icon">💡</span>
+                <h3 class="feature-title">Suggestions & Tags</h3>
+                <p class="feature-description">
+                    Autocomplete và phân tích tags
+                </p>
+                <ul class="feature-list">
+                    <li>Autocomplete character names</li>
+                    <li>Autocomplete actions</li>
+                    <li>Popular actions ranking</li>
+                    <li>Popular outfits, backgrounds</li>
+                    <li>Type, quality, speed analysis</li>
+                </ul>
+            </div>
+
+            <!-- Feature 9 -->
+            <div class="feature-card">
+                <span class="feature-icon">🔥</span>
+                <h3 class="feature-title">Trending & Recent</h3>
+                <p class="feature-description">
+                    Images mới nhất và trending
+                </p>
+                <ul class="feature-list">
+                    <li>Recent images (last N days)</li>
+                    <li>Configurable time period (1-90 days)</li>
+                    <li>Chỉ lấy images allowed for community</li>
+                    <li>Sorted by created_at DESC</li>
+                </ul>
+            </div>
+
+            <!-- Feature 10 -->
+            <div class="feature-card">
+                <span class="feature-icon">⚡</span>
+                <h3 class="feature-title">Batch Operations</h3>
+                <p class="feature-description">
+                    Lấy nhiều images cùng lúc
+                </p>
+                <ul class="feature-list">
+                    <li>Batch get by IDs (max 50)</li>
+                    <li>Single query optimization</li>
+                    <li>Return requested vs found count</li>
+                    <li>Perfect cho cart/playlist</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="stats-section">
+            <h2 class="tech-title">📊 Thống Kê API</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">9</div>
+                    <div class="stat-label">Endpoints</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">13</div>
+                    <div class="stat-label">Query Parameters</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">21</div>
+                    <div class="stat-label">Image Fields</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">Read-Only</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tech Stack Section -->
+        <div class="tech-section">
+            <h2 class="tech-title">🛠️ Công Nghệ Sử Dụng</h2>
+            <div class="tech-grid">
+                <div class="tech-item">
+                    <span class="tech-badge">Backend</span>
+                    <span class="tech-name">PHP 7.4+</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-badge">Database</span>
+                    <span class="tech-name">MySQL 5.7+ / MariaDB</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-badge">Encoding</span>
+                    <span class="tech-name">UTF-8 (utf8mb4)</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-badge">Format</span>
+                    <span class="tech-name">JSON REST API</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-badge">Security</span>
+                    <span class="tech-name">PDO Prepared Statements</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-badge">Performance</span>
+                    <span class="tech-name">Persistent Connections</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-badge">Optimization</span>
+                    <span class="tech-name">SQL_CALC_FOUND_ROWS</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-badge">CORS</span>
+                    <span class="tech-name">Cross-Origin Enabled</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="cta-section">
+            <div class="cta-buttons">
+                <a href="api-docs.html" class="cta-button">
+                    📚 Xem API Documentation
+                </a>
+                <a href="https://vidsrv.com/image/api.php?action=list&limit=5" class="cta-button secondary">
+                    🚀 Test API Ngay
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

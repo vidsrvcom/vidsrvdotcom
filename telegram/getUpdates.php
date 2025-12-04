@@ -1,7 +1,7 @@
 <?php
 header('Content-Type: application/json; charset=utf-8');
 
-$botToken = '7744214540:AAF1UTsyd9BEkpIIYoeRZWe8Sel7kYZ2J38';
+$botToken = '';
 $apiUrl = "https://api.telegram.org/bot{$botToken}/getUpdates";
 
 $ch = curl_init();
